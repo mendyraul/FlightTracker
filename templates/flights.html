@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Records</title>
+</head>
+<body>
+    <h1>Flight Records</h1>
+    <table border="1">
+        <tr>
+            <th>Flight #</th>
+            <th>To</th>
+            <th>Departure Time</th>
+            <th>Status</th>
+            <th>Delay</th>
+        </tr>
+        {% for flight in flights %}
+        <tr>
+            <td>{{ flight.flight_number }}</td>
+            <td>{{ flight.origin_destination }}</td>
+            <td>{{ flight.departure_time }}</td>
+            <td>{{ flight.status }}</td>
+            <td>{{ flight.delay }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <table border="1">
+        <tr>
+            <th>Flight #</th>
+            <th>From</th>
+            <th>Departure Time</th>
+            <th>Status</th>
+            <th>Delay</th>
+        </tr>
+        {% for flight in flights %}
+        <tr>
+            <td>{{ flight.flight_number }}</td>
+            <td>{{ flight.origin_destination }}</td>
+            <td>{{ flight.departure_time }}</td>
+            <td>{{ flight.status }}</td>
+            <td>{{ flight.delay }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
