@@ -2,8 +2,13 @@ from flask import Flask, render_template
 import sqlite3
 from flask_sqlalchemy import SQLAlchemy
 
+with open('username', 'r') as file:
+    username = file.read()
+    
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flights.db'  
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://' + username + '@flight-tracker-402620:us-east4:flights'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 class Flight(db.Model):
