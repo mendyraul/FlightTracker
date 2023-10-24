@@ -5,7 +5,7 @@ from psycopg2 import sql
 
 # Your API Key
 with open('apikey.txt','r') as file:
-    api_key = file.read()
+    api_key = file.read().strip()
 
 # Departure IATA code for MIA
 dep_iata = 'MIA'
@@ -87,27 +87,12 @@ if response.status_code == 200:
             'arr_delayed': schedule.get('arr_delayed', 'N/A')
         }
         cursor.execute(insert_query, flight_info)
-        # Update counters based on status
-        if flight_info['status'] == 'scheduled':
-            scheduled_count += 1
-        elif flight_info['status'] == 'active':
-            active_count += 1
-        elif flight_info['status'] == 'cancelled':
-            cancelled_count += 1
-        elif flight_info['status'] == 'landed':
-            landed_count += 1
+
         
         # Append to list
         flights_data.append(flight_info)
         
-        # For demonstration, print extracted data
-        print(f"Airline: {flight_info['airline_iata']}, Flight: {flight_info['flight_iata']}")
-        print(f"Departure Time: {flight_info['dep_time']}, Estimated: {flight_info['dep_estimated']}, Actual: {flight_info['dep_actual']}")
-        print(f"Arrival Time: {flight_info['arr_time']}, Estimated: {flight_info['arr_estimated']}, Actual: {flight_info['arr_actual']}")
-        print(f"Status: {flight_info['status']}")
-        print(f"Departure Delay: {flight_info['dep_delayed']}")
-        print(f"Arrival Delay: {flight_info['arr_delayed']}")
-        print("=" * 50)
+
 
     # Commit the changes to the database
     conn.commit()
@@ -115,12 +100,7 @@ if response.status_code == 200:
     # Close the cursor and connection
     cursor.close()
     conn.close()
-    # Print the length of flights_data
-    print(f"Total Number of Flights: {len(flights_data)}")
-    print(f"Total Scheduled Flights: {scheduled_count}")
-    print(f"Total Active Flights: {active_count}")
-    print(f"Total Cancelled Flights: {cancelled_count}")
-    print(f"Total Landed Flights: {landed_count}")
+
 
 else:
     print(f"Failed to retrieve flight schedules. Status code: {response.status_code}")
