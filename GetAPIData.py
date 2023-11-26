@@ -29,6 +29,20 @@ def truncate_staging_table():
         cursor.close()
         conn.close()
 
+# Function to commit staging data into history table
+def load_to_history_table():
+    conn = connect_db()
+    cursor = conn.cursor()
+    try:
+        cursor.callproc('process_flight_data')
+        conn.commit()
+        print("flights_staging table processed into history table successfully.")
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
 # Function to insert flight data into the database
 def insert_flights(flights):
     conn = connect_db()
@@ -90,9 +104,11 @@ def main():
     arr_url = f'https://airlabs.co/api/v9/schedules?arr_iata={arr_iata}&api_key={API_KEY}'
 
     # Get Departing Flights Data
+    print("Script beginning...")
     dep_result = requests.get(dep_url)
     if dep_result.status_code == 200:
         flights_dep = process_flights(dep_result.json())
+        print("API response acquired.")
     else:
         print(f"Failed to retrieve departing flights. Status code: {dep_result.status_code}")
         print(dep_result.text)
@@ -112,6 +128,9 @@ def main():
 
     # Insert data into the database
     insert_flights(flights_dep + flights_arr)
+
+    # Run the proc to merge data into history table
+    load_to_history_table()
 
 if __name__ == "__main__":
     main()
